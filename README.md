@@ -7,9 +7,8 @@ Ce projet vise à développer des méthodes basées sur l'intelligence artificie
 ## Objectifs du Projet
 
 - Étudier les artefacts de mouvement et leur impact sur les images IRM cérébrales.
-- Développer des algorithmes de détection des artefacts de mouvement à l'aide de réseaux de neurones convolutifs.
-- Concevoir des modèles pour corriger ces artefacts, en restaurant les images affectées à partir de données simulées et réelles.
-- Évaluer les performances des modèles à travers des métriques de qualité d'image telles que l'indice de similarité structurelle (SSIM).
+- Développer un algorithme de détection des artefacts de mouvement à l'aide de réseaux de neurones convolutifs.
+- Concevoir un modèle pour corriger ces artefacts.
 
 ## Méthodologie
 
