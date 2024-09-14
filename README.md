@@ -23,6 +23,21 @@ Ce projet vise à développer des méthodes basées sur l'intelligence artificie
 - **PyTorch** : Framework utilisé pour l'implémentation des réseaux de neurones.
 - **Optuna** : Bibliothèque pour l'optimisation des hyperparamètres.
 
+## Datasets d'Entraînement
+
+Le dataset est composé de 9600 IRM cérébrales avec et sans artefacts de mouvement. Les images sans artefacts proviennent des datasets publics **OpenNEURO** et **IXI Dataset**. Ces images incluent des acquisitions T1, T2 et PD et couvrent différents angles de vue : sagittal, axial et coronal, ce qui permet de diversifier le dataset pour une meilleure généralisation des modèles. 
+
+- **Images sans artefacts** : Utilisées comme référence pour évaluer les performances des modèles.
+- **Images avec artefacts de mouvement** : Générées en simulant des décalages de phase linéaires aléatoires dans l’espace K, reproduisant les effets de mouvements réels des patients.
+
+Pour visualiser la diversité des artefacts de mouvement dans ce dataset, une analyse de leur distribution a été réalisée en utilisant la métrique **SSIM (Structural Similarity Index)**, qui mesure l'intensité des artefacts par rapport à une image non corrompue. Les valeurs obtenues ont été exploitées pour définir des seuils à l'aide des quartiles :
+- Le premier quartile représente les images les plus dégradées.
+- La médiane indique un niveau modéré d’artefacts.
+- Le troisième quartile correspond aux IRM ayant le moins d’artefacts.
+
+Cette approche permet de mieux comprendre la diversité et la sévérité des artefacts présents dans les images et d’ajuster les modèles pour qu’ils soient plus robustes face à différents niveaux de dégradation.
+
+
 ## Hyperparamètres des Modèles
 
 ### Hyperparamètres du modèle DenseNet 
