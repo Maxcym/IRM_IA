@@ -23,5 +23,34 @@ Ce projet vise à développer des méthodes basées sur l'intelligence artificie
 - **PyTorch** : Framework utilisé pour l'implémentation des réseaux de neurones.
 - **Optuna** : Bibliothèque pour l'optimisation des hyperparamètres.
 
+## Hyperparamètres des Modèles
 
+### Hyperparamètres du modèle DenseNet [38]
+
+- **Taux de croissance (« growth_rate » = 8)** : Contrôle le nombre de canaux après chaque couche dans les blocs denses.
+- **Nombre de couches dans chaque bloc (« block_layers » = [4,8,12,8])** : Définit le nombre de couches de convolution 3x3 dans chaque bloc dense.
+- **Nombre de classes (« num_classes » = 2)** : Correspond au nombre de sorties de la couche fully connected, soit le nombre de classes pour la classification.
+- **Taux de Dropout (« dropout » = 0)** : Définit la probabilité pour chaque neurone d'être désactivé pendant l'entraînement pour réduire le risque de surapprentissage.
+- **Taux d’apprentissage (« learning_rate » = 3x10⁻⁶)** : Indique la vitesse à laquelle les poids sont mis à jour pendant l’entraînement.
+- **Pondération L2 (« weight_decay » = 0)** : Pénalise les grands poids en ajoutant la somme des carrés des poids à la fonction perte, réduisant le risque de surapprentissage.
+- **Nombre d’époques / epoch (« max_epochs » = 100)** : Nombre maximal de passes sur l’ensemble des données d’entraînement.
+- **Batch size (« batch_size » = 128)** : Nombre d’exemples d’entraînement utilisés pour calculer le gradient lors d’une passe d’entraînement.
+- **Taille du Kernel (« kernel_size »)** : Dimension du noyau de convolution utilisé pendant l’opération de convolution.
+- **Arrêt prématuré / Early stopping (« patience » = 3)** : Arrête l’entraînement lorsque le loss de validation reste constant ou augmente sur un nombre d'epochs définis.
+- **Stride (« Stride »)** : Pas de déplacement du filtre de convolution à travers l’image d’entrée.
+- **Padding (« padding »)** : Ajoute des pixels supplémentaires autour des bords de l’image avant l’application du filtre de convolution pour maintenir la taille des dimensions spatiales de la sortie.
+- **Scheduler de réduction du taux d'apprentissage (« ReduceLROnPlateau »)** : Réduit le taux d'apprentissage lorsque la métrique surveillée reste constante.
+
+### Hyperparamètres du modèle U-Net [38]
+
+- **Learning Rate (« learning_rate » = 1x10⁻⁴)** : Indique la vitesse à laquelle les poids sont mis à jour pendant l’entraînement.
+- **Nombre de canaux des couches convolutives (« in_channels », « out_channels »)** : Définit le nombre de canaux en entrée et en sortie pour chaque couche convolutionnelle.
+- **Kernel Size (« kernel_size »)** : Dimension du noyau de convolution utilisé pendant l’opération de convolution.
+- **Padding (« padding »)** : Ajoute des pixels supplémentaires autour des bords de l’image avant l’application du filtre de convolution.
+- **Stride (« stride »)** : Pas de déplacement du filtre de convolution à travers l’image d’entrée.
+- **Nombre d’époques (« max_epochs » = 100)** : Nombre maximum de passes sur l'ensemble des données d'entraînement.
+- **Batch Size (« batch_size » = 256)** : Nombre d’exemples d’entraînement utilisés pour calculer le gradient lors d’une passe d’entraînement.
+- **Scheduler de réduction du taux d'apprentissage (« ReduceLROnPlateau »)** : Réduit le taux d'apprentissage lorsqu’une métrique surveillée reste constante.
+- **Early Stopping (« patience » = 15)** : Interrompt l'entraînement lorsque la perte de validation ne s’améliore pas sur un nombre d'époques défini.
+- **Attention Kernel Size (« kernel_size » = 7)** : Taille du noyau utilisé dans le module d'attention spatiale pour capturer les caractéristiques des cartes de caractéristiques.
 
