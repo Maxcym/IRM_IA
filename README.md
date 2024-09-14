@@ -2,7 +2,7 @@
 
 ## Description du Projet
 
-Ce projet vise à développer des méthodes basées sur l'intelligence artificielle pour détecter et corriger les artefacts de mouvement sur les images d'Imagerie par Résonance Magnétique (IRM) cérébrales. Les artefacts de mouvement, causés par des déplacements volontaires ou involontaires des patients lors des acquisitions IRM, altèrent la qualité des images et compliquent le diagnostic médical. En s'appuyant sur des réseaux de neurones profonds tels que DenseNet pour la détection et U-Net pour la correction, ce projet propose une solution pour automatiser le processus de correction des images, améliorant ainsi leur qualité et facilitant l'interprétation clinique.
+Ce projet vise à développer des méthodes basées sur l'intelligence artificielle pour détecter et corriger les artefacts de mouvement sur les images d'Imagerie par Résonance Magnétique (IRM) cérébrales. Les artefacts de mouvement, causés par des déplacements volontaires ou involontaires des patients lors des acquisitions IRM, altèrent la qualité des images et compliquent le diagnostic médical. Ce projet propose donc une solution améliorer la qualité des images et faciliter l'interprétation clinique.
 
 ## Objectifs du Projet
 
