@@ -25,7 +25,7 @@ Ce projet vise à développer des méthodes basées sur l'intelligence artificie
 
 ## Hyperparamètres des Modèles
 
-### Hyperparamètres du modèle DenseNet [38]
+### Hyperparamètres du modèle DenseNet 
 
 - **Taux de croissance (« growth_rate » = 8)** : Contrôle le nombre de canaux après chaque couche dans les blocs denses.
 - **Nombre de couches dans chaque bloc (« block_layers » = [4,8,12,8])** : Définit le nombre de couches de convolution 3x3 dans chaque bloc dense.
@@ -41,7 +41,7 @@ Ce projet vise à développer des méthodes basées sur l'intelligence artificie
 - **Padding (« padding »)** : Ajoute des pixels supplémentaires autour des bords de l’image avant l’application du filtre de convolution pour maintenir la taille des dimensions spatiales de la sortie.
 - **Scheduler de réduction du taux d'apprentissage (« ReduceLROnPlateau »)** : Réduit le taux d'apprentissage lorsque la métrique surveillée reste constante.
 
-### Hyperparamètres du modèle U-Net [38]
+### Hyperparamètres du modèle U-Net 
 
 - **Learning Rate (« learning_rate » = 1x10⁻⁴)** : Indique la vitesse à laquelle les poids sont mis à jour pendant l’entraînement.
 - **Nombre de canaux des couches convolutives (« in_channels », « out_channels »)** : Définit le nombre de canaux en entrée et en sortie pour chaque couche convolutionnelle.
