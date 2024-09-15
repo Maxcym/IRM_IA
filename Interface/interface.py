@@ -31,29 +31,29 @@ class ArtifactCorrectionApp(QMainWindow):
         super().__init__()
         self.setWindowTitle("Détecteur et correcteur d'artefacts de mouvement")
         self.setGeometry(600, 600, 800, 100)
-        self.center()  # Centrer la fenêtre sur l'écran au lancement
+        self.center()
 
         # Définir l'icône de l'application
-        self.setWindowIcon(QIcon("C:/Users/maxim/PycharmProjects/artefact_detection/Demo/logo.png"))  # Remplacez par le chemin de votre logo
+        self.setWindowIcon(QIcon("C:/Users/maxim/PycharmProjects/artefact_detection/Demo/logo.png"))
 
         # Initialisation des layouts et des widgets
         self.layout = QVBoxLayout()
-        self.image_layout = QHBoxLayout()  # Layout pour afficher les images
-        self.slider_layout = QHBoxLayout()  # Layout pour le curseur et sa valeur
+        self.image_layout = QHBoxLayout()
+        self.slider_layout = QHBoxLayout()
 
         # Widget de conteneur pour les champs de redimensionnement
-        self.resize_widget = QWidget()  # Widget conteneur pour les champs de redimensionnement et le bouton
-        self.resize_layout = QFormLayout(self.resize_widget)  # Layout pour les champs de redimensionnement
+        self.resize_widget = QWidget()
+        self.resize_layout = QFormLayout(self.resize_widget)
 
         self.load_image_button = QPushButton("Charger une image avec artefacts de mouvement")
         self.detect_button = QPushButton("Détecter et corriger les artefacts de mouvement")
         self.label = QLabel("Chargez une image pour commencer !")
-        self.probability_label = QLabel("Probabilité de détection : N/A")  # Label pour afficher la probabilité
-        self.probability_label.setVisible(False)  # Masquer le label de probabilité au démarrage
-        self.original_image_label = QLabel()  # QLabel pour l'image originale
-        self.corrected_image_label = QLabel()  # QLabel pour l'image corrigée
+        self.probability_label = QLabel("Probabilité de détection : N/A")
+        self.probability_label.setVisible(False)
+        self.original_image_label = QLabel()
+        self.corrected_image_label = QLabel()
         self.slider = QSlider(Qt.Horizontal)
-        self.slider_value_label = QLabel("Facteur de correction : 1.0")  # Label pour afficher la valeur actuelle du curseur
+        self.slider_value_label = QLabel("Facteur de correction : 1.0")
 
         # Champs de saisie pour redimensionner les images
         self.width_input = QLineEdit()
@@ -61,7 +61,7 @@ class ArtifactCorrectionApp(QMainWindow):
         self.resize_button = QPushButton("Redimensionner les images")
         self.width_input.clear()
         self.height_input.clear()
-        self.resize_widget.setVisible(False)  # Masquer le widget contenant les champs de redimensionnement et le bouton
+        self.resize_widget.setVisible(False)
 
         # Masquer initialement les labels d'image et le curseur
         self.original_image_label.setVisible(False)
