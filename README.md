@@ -8,13 +8,11 @@ Ce projet vise à développer des méthodes basées sur l'intelligence artificie
 
 - **Python** : Langage principal pour le développement des algorithmes.
 - **PyTorch** : Framework utilisé pour l'implémentation des réseaux de neurones, facilitant la création et l'entraînement de modèles de deep learning.
+- **PyTorch Lightning** : Extension de PyTorch qui simplifie le code de recherche en structurant les scripts d'entraînement, rendant le code plus propre et plus facile à gérer tout en permettant une intégration facile avec des outils comme Optuna pour l'optimisation.
 - **Optuna** : Bibliothèque pour l'optimisation des hyperparamètres, permettant de trouver les configurations optimales pour améliorer les performances des modèles.
 - **PyQt5** : Utilisé pour développer l'interface utilisateur graphique (GUI) permettant de tester les réseaux de neurones pour la détection et correction des artefacts.
-- **Matplotlib** : Bibliothèque utilisée pour la visualisation des résultats, des courbes de perte, et des images corrigées, ainsi que pour l'affichage des GRAD-CAM pour interpréter les détections.
 - **Scikit-learn** : Employé pour diverses métriques d'évaluation des modèles et la gestion des jeux de données.
 - **PIL (Python Imaging Library)** : Utilisée pour le traitement et la manipulation des images dans le pipeline de correction et détection.
-- **Torchvision** : Fournit des transformations et des datasets supplémentaires pour le prétraitement des images et l'amélioration des données d'entraînement.
-- **Lightning** : Framework qui améliore la lisibilité et la flexibilité du code PyTorch, utilisé pour structurer le code, gérer les entraînements et intégrer facilement Optuna pour l'optimisation.
 
 ## Dataset d'entraînement
 
