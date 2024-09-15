@@ -97,8 +97,6 @@ Optuna a été utilisé pour l’optimisation des hyperparamètres en testant di
 - **Early Stopping (« patience » = 15)** : Interrompt l'entraînement lorsque la perte de validation ne s’améliore pas sur un nombre d'époques défini.
 - **Attention Kernel Size (« kernel_size » = 7)** : Taille du noyau utilisé dans le module d'attention spatiale pour capturer les caractéristiques des cartes de caractéristiques.
 
-## Interface utilisateur pour tester les réseaux de neurones
-
 Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester facilement les réseaux de neurones pour la détection et la correction des artefacts de mouvement dans les images IRM. Cette application, développée en Python avec PyQt5, propose les fonctionnalités suivantes :
 
 - **Chargement des Images** : Permet de charger des images IRM avec des artefacts de mouvement directement depuis votre ordinateur.
@@ -106,4 +104,6 @@ Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester 
 - **Correction des Artefacts** : Si des artefacts sont détectés, le modèle U-Net est utilisé pour corriger l'image, améliorant ainsi sa qualité.
 - **Ajustement du Facteur de Correction** : Un curseur est disponible pour ajuster dynamiquement le facteur de correction appliqué aux résidus de mouvement.
 - **Redimensionnement des Images** : Des champs de saisie permettent de redimensionner les images affichées selon les besoins de l'utilisateur.
+- **Visualisation de la Grad-CAM** : L'interface permet également d'afficher la Grad-CAM (Gradient-weighted Class Activation Mapping), qui met en évidence les zones de l'image ayant le plus influencé la détection des artefacts par le modèle. 
+
 
