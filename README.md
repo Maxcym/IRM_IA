@@ -28,8 +28,7 @@ Pour visualiser la diversité des artefacts de mouvement dans ce dataset, une an
 
 Cette approche rend les modèles plus robustes face à différents niveaux de dégradation.
 
-<img src="([Dataset_Normalized_UNet/distribution.png]" alt="Distribution des scores SSIM avec classification par seuils des artefacts de mouvement (Dataset de Test)" width="300"/>
-
+<img src="https://github.com/Maxcym/IRM_IA/blob/main/Dataset_Normalized_UNet/distribution.png" alt="Distribution des scores SSIM avec classification par seuils des artefacts de mouvement (Dataset de Test)" width="400"/>
 
 ## Méthode de simulation des artefacts de mouvement
 
