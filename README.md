@@ -1,29 +1,16 @@
-# Détection et Correction des Artefacts de Mouvement sur les Images d'IRM Cérébrales
+# Détection et correction des artefacts de mouvement sur les images d'IRM cérébrales
 
-## Description du Projet
+## Description du projet
 
-Ce projet vise à développer des méthodes basées sur l'intelligence artificielle pour détecter et corriger les artefacts de mouvement sur les images d'Imagerie par Résonance Magnétique (IRM) cérébrales. Les artefacts de mouvement, causés par des déplacements volontaires ou involontaires des patients lors des acquisitions IRM, altèrent la qualité des images et compliquent le diagnostic médical. En s'appuyant sur des réseaux de neurones profonds tels que DenseNet pour la détection et U-Net pour la correction, ce projet propose une solution pour automatiser le processus de correction des images, améliorant ainsi leur qualité et facilitant l'interprétation clinique.
+Ce projet vise à développer des méthodes basées sur l'intelligence artificielle pour détecter et corriger les artefacts de mouvement sur les images d'Imagerie par Résonance Magnétique (IRM) cérébrales. Ces artefacts sont causés par des déplacements volontaires ou involontaires des patients lors des acquisitions IRM, ce qui dégrade la qualité des images et complique le diagnostic médical. Ce projet propose donc une solution visant à améliorer la qualité des images et à faciliter leur interprétation clinique.
 
-## Objectifs du Projet
-
-- Étudier les artefacts de mouvement et leur impact sur les images IRM cérébrales.
-- Développer un algorithme de détection des artefacts de mouvement à l'aide de réseaux de neurones convolutifs.
-- Concevoir un modèle pour corriger ces artefacts.
-
-## Méthodologie
-
-1. **Étude des Artefacts de Mouvement** : Analyse des types d'artefacts causés par les mouvements et de leur impact sur les images IRM.
-2. **Développement de Modèles** : Utilisation de DenseNet pour détecter les artefacts et de U-Net pour corriger les images dégradées. Les modèles sont entraînés sur des jeux de données comprenant des images IRM avec et sans artefacts.
-3. **Entraînement et Évaluation** : Les réseaux de neurones sont entraînés sur des serveurs équipés de GPU pour maximiser l'efficacité du traitement. Les performances sont évaluées à l'aide de métriques comme le SSIM.
-4. **Optimisation** : Ajustement des hyperparamètres via des techniques d'optimisation bayésienne pour améliorer la précision et la fiabilité des modèles.
-
-## Technologies Utilisées
+## Technologies utilisées
 
 - **Python** : Langage principal pour le développement des algorithmes.
 - **PyTorch** : Framework utilisé pour l'implémentation des réseaux de neurones.
 - **Optuna** : Bibliothèque pour l'optimisation des hyperparamètres.
 
-## Datasets d'Entraînement
+## Dataset d'entraînement
 
 Le dataset est composé de 9600 IRM cérébrales avec et sans artefacts de mouvement. Les images sans artefacts proviennent des datasets publics **OpenNEURO** et **IXI Dataset**. Ces images incluent des acquisitions T1, T2 et PD et couvrent différents angles de vue : sagittal, axial et coronal, ce qui permet de diversifier le dataset pour une meilleure généralisation des modèles. 
 
@@ -37,8 +24,39 @@ Pour visualiser la diversité des artefacts de mouvement dans ce dataset, une an
 
 Cette approche permet de mieux comprendre la diversité et la sévérité des artefacts présents dans les images et d’ajuster les modèles pour qu’ils soient plus robustes face à différents niveaux de dégradation.
 
+## Méthode de simulation des artefacts de mouvement
 
-## Hyperparamètres des Modèles
+La simulation des artefacts de mouvement dans ce projet est réalisée en appliquant des décalages de phase aléatoires dans l'espace k des images IRM. Cette méthode permet de reproduire les effets de mouvement observés lors de l'acquisition des images, altérant ainsi la qualité des images pour tester et évaluer les algorithmes de correction.
+
+### Classe `MotionArtifactSimulator`
+
+La classe `MotionArtifactSimulator` permet de simuler des artefacts de mouvement sur des images IRM en introduisant des décalages de phase dans des régions spécifiques de l'espace k. Voici les principales fonctionnalités de cette méthode :
+
+2. **Simulation des artefacts** :
+   - Le simulateur lit les images IRM d'entrée et alterne les effets de décalage entre les directions AP et LR pour chaque  image :
+     - **Antéro-Postérieure (AP)** : Décalage dans les lignes de l'espace k.
+     - **Latérale (LR)** : Décalage dans les colonnes de l'espace k.
+   - Des décalages de phase aléatoires sont appliqués sur des régions spécifiques (centre ou bords) de l'espace k, modifiant l'image en conséquence.
+
+3. **Enregistrement des décalages de phase sous forme de graphiques** :
+   - Les décalages de phase appliqués sont enregistrés dans un fichier CSV pour chaque image, ce qui permet une analyse précise des modifications effectuées.
+   - En plus des fichiers CSV, les décalages de phase appliqués sont également enregistrés sous forme de graphiques. Ces graphiques montrent la distribution des décalages dans l'espace k, ce qui permet de visualiser l'impact du mouvement simulé sur l'image.
+   - Les images corrompues sont sauvegardées avec leurs résidus de mouvement, qui représentent les différences entre les images d'origine et les images altérées.
+
+6. **Affichage des Résultats** :
+   - Le simulateur permet d'afficher les images originales, les images corrompues, les décalages de phase appliqués, et les résidus de mouvement pour une analyse visuelle des artefacts simulés.
+
+## Interface utilisateur pour tester les réseaux de neurones
+
+Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester facilement les réseaux de neurones pour la détection et la correction des artefacts de mouvement dans les images IRM. Cette application, développée en Python avec PyQt5, propose les fonctionnalités suivantes :
+
+- **Chargement des Images** : Permet de charger des images IRM avec des artefacts de mouvement directement depuis votre ordinateur.
+- **Détection des Artefacts** : Utilise le modèle DenseNet pour détecter la présence d'artefacts de mouvement dans les images chargées.
+- **Correction des Artefacts** : Si des artefacts sont détectés, le modèle U-Net est utilisé pour corriger l'image, améliorant ainsi sa qualité.
+- **Ajustement du Facteur de Correction** : Un curseur est disponible pour ajuster dynamiquement le facteur de correction appliqué aux résidus de mouvement.
+- **Redimensionnement des Images** : Des champs de saisie permettent de redimensionner les images affichées selon les besoins de l'utilisateur.
+
+## Hyperparamètres des modèles
 
 ### Hyperparamètres du modèle DenseNet 
 
