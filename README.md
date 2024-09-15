@@ -1,16 +1,16 @@
-# Détection et Correction des Artefacts de Mouvement sur les Images d'IRM Cérébrales
+# Détection et correction des artefacts de mouvement sur les images d'IRM cérébrales
 
-## Description du Projet
+## Description du projet
 
 Ce projet vise à développer des méthodes basées sur l'intelligence artificielle pour détecter et corriger les artefacts de mouvement sur les images d'Imagerie par Résonance Magnétique (IRM) cérébrales. Ces artefacts sont causés par des déplacements volontaires ou involontaires des patients lors des acquisitions IRM, ce qui dégrade la qualité des images et complique le diagnostic médical. Ce projet propose donc une solution visant à améliorer la qualité des images et à faciliter leur interprétation clinique.
 
-## Technologies Utilisées
+## Technologies utilisées
 
 - **Python** : Langage principal pour le développement des algorithmes.
 - **PyTorch** : Framework utilisé pour l'implémentation des réseaux de neurones.
 - **Optuna** : Bibliothèque pour l'optimisation des hyperparamètres.
 
-## Datasets d'Entraînement
+## Dataset d'entraînement
 
 Le dataset est composé de 9600 IRM cérébrales avec et sans artefacts de mouvement. Les images sans artefacts proviennent des datasets publics **OpenNEURO** et **IXI Dataset**. Ces images incluent des acquisitions T1, T2 et PD et couvrent différents angles de vue : sagittal, axial et coronal, ce qui permet de diversifier le dataset pour une meilleure généralisation des modèles. 
 
@@ -24,7 +24,7 @@ Pour visualiser la diversité des artefacts de mouvement dans ce dataset, une an
 
 Cette approche permet de mieux comprendre la diversité et la sévérité des artefacts présents dans les images et d’ajuster les modèles pour qu’ils soient plus robustes face à différents niveaux de dégradation.
 
-## Méthode de Simulation des Artefacts de Mouvement
+## Méthode de simulation des artefacts de mouvement
 
 La simulation des artefacts de mouvement dans ce projet est réalisée en appliquant des décalages de phase aléatoires dans l'espace k des images IRM. Cette méthode permet de reproduire les effets de mouvement observés lors de l'acquisition des images, altérant ainsi la qualité des images pour tester et évaluer les algorithmes de correction.
 
@@ -46,7 +46,7 @@ La classe `MotionArtifactSimulator` permet de simuler des artefacts de mouvement
 6. **Affichage des Résultats** :
    - Le simulateur permet d'afficher les images originales, les images corrompues, les décalages de phase appliqués, et les résidus de mouvement pour une analyse visuelle des artefacts simulés.
 
-## Interface Utilisateur pour Tester les Réseaux de Neurones
+## Interface utilisateur pour tester les réseaux de neurones
 
 Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester facilement les réseaux de neurones pour la détection et la correction des artefacts de mouvement dans les images IRM. Cette application, développée en Python avec PyQt5, propose les fonctionnalités suivantes :
 
@@ -56,7 +56,7 @@ Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester 
 - **Ajustement du Facteur de Correction** : Un curseur est disponible pour ajuster dynamiquement le facteur de correction appliqué aux résidus de mouvement.
 - **Redimensionnement des Images** : Des champs de saisie permettent de redimensionner les images affichées selon les besoins de l'utilisateur.
 
-## Hyperparamètres des Modèles
+## Hyperparamètres des modèles
 
 ### Hyperparamètres du modèle DenseNet 
 
