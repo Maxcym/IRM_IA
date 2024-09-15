@@ -26,7 +26,9 @@ Pour visualiser la diversité des artefacts de mouvement dans ce dataset, une an
 - La médiane indique un niveau modéré d’artefacts.
 - Le troisième quartile correspond aux IRM ayant le moins d’artefacts.
 
-Cette approche permet de mieux comprendre la diversité et la sévérité des artefacts présents dans les images et d’ajuster les modèles pour qu’ils soient plus robustes face à différents niveaux de dégradation.
+Cette approche rend les modèles plus robustes face à différents niveaux de dégradation.
+
+![Distribution des scores SSIM avec classification par seuils des artefacts de mouvement (Dataset de Test)](Dataset_Normalized_UNet/distribution.png)
 
 ## Méthode de simulation des artefacts de mouvement
 
