@@ -51,8 +51,8 @@ La classe `MotionArtifactSimulator` permet de simuler des artefacts de mouvement
 Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester facilement les réseaux de neurones pour la détection et la correction des artefacts de mouvement dans les images IRM. Cette application, développée en Python avec PyQt5, propose les fonctionnalités suivantes :
 
 - **Chargement des Images** : Permet de charger des images IRM avec des artefacts de mouvement directement depuis votre ordinateur.
-- **Détection des Artefacts** : Utilise un modèle DenseNet pour détecter la présence d'artefacts de mouvement dans les images chargées.
-- **Correction des Artefacts** : Si des artefacts sont détectés, un modèle U-Net est utilisé pour corriger l'image, améliorant ainsi sa qualité.
+- **Détection des Artefacts** : Utilise le modèle DenseNet pour détecter la présence d'artefacts de mouvement dans les images chargées.
+- **Correction des Artefacts** : Si des artefacts sont détectés, le modèle U-Net est utilisé pour corriger l'image, améliorant ainsi sa qualité.
 - **Ajustement du Facteur de Correction** : Un curseur est disponible pour ajuster dynamiquement le facteur de correction appliqué aux résidus de mouvement.
 - **Redimensionnement des Images** : Des champs de saisie permettent de redimensionner les images affichées selon les besoins de l'utilisateur.
 
