@@ -50,7 +50,7 @@ La classe `MotionArtifactSimulator` permet de simuler des artefacts de mouvement
 
 Pour le modèle U-Net, l’optimisation des hyperparamètres a été réalisée pour améliorer l'efficacité et la performance du processus d'entraînement. L'objectif était de trouver les valeurs optimales pour le taux d’apprentissage, le choix de l'optimiseur, le facteur de réduction du taux d’apprentissage, et la patience du scheduler. L'optimisation des hyperparamètres n’a pas été effectuée sur la structure du réseau elle-même, car l'architecture montrait déjà de bons résultats lors des tests préliminaires.
 
-### Stratégie d'Optimisation
+### Stratégie d'optimisation
 
 **Hyperparamètres optimisés** :
    - **Taux d’apprentissage (learning rate)** : Contrôle la vitesse d'ajustement des poids du réseau au cours de l'entraînement. Une valeur trop élevée peut entraîner un apprentissage trop rapide et instable, tandis qu'une valeur trop faible peut ralentir considérablement le processus d'entraînement.
@@ -96,6 +96,8 @@ Optuna a été utilisé pour l’optimisation des hyperparamètres en testant di
 - **Scheduler de réduction du taux d'apprentissage (« ReduceLROnPlateau »)** : Réduit le taux d'apprentissage lorsqu’une métrique surveillée reste constante.
 - **Early Stopping (« patience » = 15)** : Interrompt l'entraînement lorsque la perte de validation ne s’améliore pas sur un nombre d'époques défini.
 - **Attention Kernel Size (« kernel_size » = 7)** : Taille du noyau utilisé dans le module d'attention spatiale pour capturer les caractéristiques des cartes de caractéristiques.
+
+## Interface utilisateur pour tester les réseaux de neurones
 
 Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester facilement les réseaux de neurones pour la détection et la correction des artefacts de mouvement dans les images IRM. Cette application, développée en Python avec PyQt5, propose les fonctionnalités suivantes :
 
