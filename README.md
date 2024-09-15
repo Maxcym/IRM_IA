@@ -46,7 +46,7 @@ La classe `MotionArtifactSimulator` permet de simuler des artefacts de mouvement
 **Affichage des Résultats** :
    - Le simulateur permet d'afficher les images originales, les images corrompues, les décalages de phase appliqués, et les résidus de mouvement pour une analyse visuelle des artefacts simulés.
 
-## Optimisation des Hyperparamètres
+## Optimisation des hyperparamètres
 
 Pour le modèle U-Net, l’optimisation des hyperparamètres a été réalisée pour améliorer l'efficacité et la performance du processus d'entraînement. L'objectif était de trouver les valeurs optimales pour le taux d’apprentissage, le choix de l'optimiseur, le facteur de réduction du taux d’apprentissage, et la patience du scheduler. L'optimisation des hyperparamètres n’a pas été effectuée sur la structure du réseau elle-même, car l'architecture montrait déjà de bons résultats lors des tests préliminaires.
 
