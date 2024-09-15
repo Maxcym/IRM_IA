@@ -8,8 +8,8 @@ from PyQt5.QtCore import Qt
 from PIL import Image
 from torchvision import transforms
 import numpy as np
-from Neur_network.denseNet_detection import CustomDenseNet
-from Neur_network.uNet_correction_residus import UNet
+from Neural_networks.denseNet_detection import CustomDenseNet
+from Neural_networks.uNet_correction_residus import UNet
 
 
 class ArtifactCorrectionApp(QMainWindow):
