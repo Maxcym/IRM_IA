@@ -116,7 +116,7 @@ class ArtifactCorrectionApp(QMainWindow):
             self.slider.setVisible(False)
             self.slider_value_label.setVisible(False)
             self.probability_label.setVisible(False)
-            self.toggle_grad_cam_button.setVisible(False)  # Hide toggle button when loading a new image
+            self.toggle_grad_cam_button.setVisible(False)
             self.adjustSize()
 
     def evaluate_model(self):
@@ -153,7 +153,7 @@ class ArtifactCorrectionApp(QMainWindow):
 
             if predicted.item() == 1:
                 self.label.setText("Artefact de mouvement détecté et corrigé")
-                self.display_grad_cam()  # Directly display Grad-CAM when artifacts are detected
+                self.display_grad_cam()
                 self.correct_artifact()
             else:
                 self.label.setText("Aucun artefact de mouvement détecté")
