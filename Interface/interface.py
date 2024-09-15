@@ -1,7 +1,7 @@
 import sys
 import torch
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QPushButton, QLabel, QFileDialog, QVBoxLayout, QWidget, QHBoxLayout, QSlider, QDesktopWidget, QLineEdit, QFormLayout
+    QApplication, QMainWindow, QPushButton, QLabel, QFileDialog, QVBoxLayout, QWidget, QHBoxLayout, QSlider, QDesktopWidget
 )
 from PyQt5.QtGui import QPixmap, QImage, QIcon
 from PyQt5.QtCore import Qt
@@ -10,24 +10,15 @@ from torchvision import transforms
 import numpy as np
 from Neural_networks.denseNet_detection import CustomDenseNet
 from Neural_networks.uNet_correction_residus import UNet
-
+from grad_cam import GradCAM, visualize_cam_on_image  # Import Grad-CAM related code
+import cv2
 
 class ArtifactCorrectionApp(QMainWindow):
     """
     Application pour détecter et corriger les artefacts de mouvement dans les images IRM.
-
-    Attributs :
-        image_path (str) : Chemin de l'image chargée avec des artefacts de mouvement.
-        corrected_image (ndarray) : Image corrigée des artefacts de mouvement.
-        predicted_residuals (ndarray) : Résidus prédits par le modèle de correction.
-        current_width (int) : Largeur actuelle des images affichées après redimensionnement.
-        current_height (int) : Hauteur actuelle des images affichées après redimensionnement.
     """
 
     def __init__(self):
-        """
-        Initialise l'interface utilisateur, les layouts, les widgets et les connexions des boutons.
-        """
         super().__init__()
         self.setWindowTitle("Détecteur et correcteur d'artefacts de mouvement")
         self.setGeometry(600, 600, 800, 100)
@@ -41,41 +32,38 @@ class ArtifactCorrectionApp(QMainWindow):
         self.image_layout = QHBoxLayout()
         self.slider_layout = QHBoxLayout()
 
-        # Widget de conteneur pour les champs de redimensionnement
-        self.resize_widget = QWidget()
-        self.resize_layout = QFormLayout(self.resize_widget)
-
-        self.load_image_button = QPushButton("Charger une image avec artefacts de mouvement")
-        self.detect_button = QPushButton("Détecter et corriger les artefacts de mouvement")
-        self.label = QLabel("Chargez une image pour commencer !")
-        self.probability_label = QLabel("Probabilité de détection : N/A")
-        self.probability_label.setVisible(False)
-        self.original_image_label = QLabel()
-        self.corrected_image_label = QLabel()
+        self.toggle_grad_cam_button = QPushButton("Afficher/Masquer la Grad-CAM")
+        self.toggle_grad_cam_button.setStyleSheet("background-color: grey; color: white; font-weight: bold; font-size: 13px; font-family: Arial; border-radius: 3px; padding: 5px")
+        self.toggle_grad_cam_button.setVisible(False)  # Initially hidden
+        self.grad_cam_label = QLabel()
+        self.load_image_button = QPushButton("Load Image with motion artifacts")
+        self.load_image_button.setStyleSheet("background-color: grey; color: white; font-weight: bold; font-size: 13px; font-family: Arial; border-radius: 3px; padding: 5px")
+        self.detect_button = QPushButton("Detect and correct motion artifacts")
+        self.detect_button.setStyleSheet("background-color: grey; color: white; font-weight: bold; font-size: 13px; font-family: Arial; border-radius: 3px; padding: 5px")
+        self.label = QLabel("Load an image to start!")
+        self.label.setStyleSheet("color: black; font-weight: bold; font-size: 11px; font-family: Arial")
+        self.probability_label = QLabel("Detection probability: N/A")  # Label to display probability
+        self.probability_label.setStyleSheet("color: red; font-weight: bold; font-size: 11px; font-family: Arial")
+        self.probability_label.setVisible(False)  # Hide the probability label initially
+        self.original_image_label = QLabel()  # QLabel for original image
+        self.corrected_image_label = QLabel()  # QLabel for corrected image
         self.slider = QSlider(Qt.Horizontal)
-        self.slider_value_label = QLabel("Facteur de correction : 1.0")
-
-        # Champs de saisie pour redimensionner les images
-        self.width_input = QLineEdit()
-        self.height_input = QLineEdit()
-        self.resize_button = QPushButton("Redimensionner les images")
-        self.width_input.clear()
-        self.height_input.clear()
-        self.resize_widget.setVisible(False)
+        self.slider_value_label = QLabel("Correction factor: 1.0")  # Label to display current slider value
+        self.slider_value_label.setStyleSheet("font-family: Arial")
 
         # Masquer initialement les labels d'image et le curseur
         self.original_image_label.setVisible(False)
         self.corrected_image_label.setVisible(False)
+        self.grad_cam_label.setVisible(False)
         self.slider.setVisible(False)
         self.slider_value_label.setVisible(False)
-        self.slider.setRange(1, 15)  # Plage du curseur pour ajuster le facteur de correction
-        self.slider.setValue(10)  # Valeur par défaut réglée à 10 (facteur de correction de 1.0)
-        self.width_input.setPlaceholderText("Largeur")
-        self.height_input.setPlaceholderText("Hauteur")
+        self.slider.setRange(1, 15)
+        self.slider.setValue(10)
 
         # Ajouter les widgets au layout
         self.layout.addWidget(self.load_image_button)
         self.layout.addWidget(self.detect_button)
+        self.layout.addWidget(self.toggle_grad_cam_button)
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.probability_label)
         self.slider_layout.addWidget(self.slider)
@@ -83,11 +71,8 @@ class ArtifactCorrectionApp(QMainWindow):
         self.layout.addLayout(self.slider_layout)
         self.image_layout.addWidget(self.original_image_label)
         self.image_layout.addWidget(self.corrected_image_label)
+        self.image_layout.addWidget(self.grad_cam_label)
         self.layout.addLayout(self.image_layout)
-        self.resize_layout.addRow("Largeur :", self.width_input)
-        self.resize_layout.addRow("Hauteur :", self.height_input)
-        self.resize_layout.addWidget(self.resize_button)
-        self.layout.addWidget(self.resize_widget)
 
         # Définir le layout sur le widget central
         central_widget = QWidget()
@@ -97,8 +82,8 @@ class ArtifactCorrectionApp(QMainWindow):
         # Connecter les boutons aux fonctions
         self.load_image_button.clicked.connect(self.load_image_with_artifacts)
         self.detect_button.clicked.connect(self.evaluate_model)
+        self.toggle_grad_cam_button.clicked.connect(self.toggle_grad_cam)
         self.slider.valueChanged.connect(self.update_correction)
-        self.resize_button.clicked.connect(self.apply_resize)
 
         # Variables pour stocker les chemins et le facteur de correction
         self.image_path = None
@@ -106,6 +91,9 @@ class ArtifactCorrectionApp(QMainWindow):
         self.predicted_residuals = None
         self.current_width = None
         self.current_height = None
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = None
+        self.target_layer = None
 
     def center(self):
         """Centre la fenêtre sur l'écran."""
@@ -115,10 +103,7 @@ class ArtifactCorrectionApp(QMainWindow):
         self.move(qr.topLeft())
 
     def load_image_with_artifacts(self):
-        """
-        Charge une image avec des artefacts de mouvement à partir d'un fichier.
-        Réinitialise les widgets d'affichage et masque les champs inutilisés.
-        """
+        """Charge une image avec des artefacts de mouvement à partir d'un fichier."""
         file_name, _ = QFileDialog.getOpenFileName(self, "Sélectionner une image avec artefacts de mouvement")
         if file_name:
             self.image_path = file_name
@@ -127,56 +112,48 @@ class ArtifactCorrectionApp(QMainWindow):
             # Réinitialiser la visibilité des labels d'image, du curseur et des champs de saisie
             self.original_image_label.setVisible(False)
             self.corrected_image_label.setVisible(False)
+            self.grad_cam_label.setVisible(False)
             self.slider.setVisible(False)
             self.slider_value_label.setVisible(False)
-            self.resize_widget.setVisible(False)
-            self.width_input.clear()
-            self.height_input.clear()
             self.probability_label.setVisible(False)
+            self.toggle_grad_cam_button.setVisible(False)  # Hide toggle button when loading a new image
             self.adjustSize()
 
     def evaluate_model(self):
-        """
-        Évalue le modèle de détection des artefacts sur l'image chargée.
-        Affiche la probabilité de détection et corrige les artefacts si détectés.
-        """
+        """Évalue le modèle de détection des artefacts sur l'image chargée."""
         if not self.image_path:
             self.label.setText("Veuillez charger une image avant la détection.")
             return
 
         try:
-            # Détection de l'appareil (CPU ou GPU)
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
             # Chargement du modèle de détection
-            model = CustomDenseNet(num_classes=2, learning_rate=3e-6)
-            model.load_state_dict(
-                torch.load("C:/Users/maxim/PycharmProjects/artefact_detection/Neur_network/simplified_densenet_model_opti.pth", map_location=device, weights_only=True))
-            model.to(device)
-            model.eval()
+            self.model = CustomDenseNet(num_classes=2, learning_rate=3e-6)
+            self.model.load_state_dict(
+                torch.load("C:/Users/maxim/PycharmProjects/artefact_detection/Neur_network/simplified_densenet_model_opti.pth", map_location=self.device, weights_only=True))
+            self.model.to(self.device)
+            self.model.eval()
 
-            # Transformation de l'image
             transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.ToTensor(),
             ])
 
-            # Chargement et transformation de l'image de test
             image = Image.open(self.image_path)
-            image = transform(image).unsqueeze(0).to(device)
+            image = transform(image).unsqueeze(0).to(self.device)
 
-            # Détection des artefacts
-            output = model(image)
+            output = self.model(image)
             probability = torch.softmax(output, dim=1)
-            prob_class_1 = probability[0, 1].item() * 100  # Probabilité de la classe 1 en pourcentage
+            prob_class_1 = probability[0, 1].item() * 100
             _, predicted = torch.max(output, 1)
 
-            # Affichage de la probabilité
             self.probability_label.setText(f"Probabilité de détection : {prob_class_1:.2f}%")
             self.probability_label.setVisible(True)
 
             if predicted.item() == 1:
                 self.label.setText("Artefact de mouvement détecté et corrigé")
+                self.display_grad_cam()  # Directly display Grad-CAM when artifacts are detected
                 self.correct_artifact()
             else:
                 self.label.setText("Aucun artefact de mouvement détecté")
@@ -185,51 +162,36 @@ class ArtifactCorrectionApp(QMainWindow):
             print(f"Erreur lors de l'évaluation du modèle : {e}")
 
     def correct_artifact(self):
-        """
-        Corrige les artefacts de mouvement détectés dans l'image à l'aide d'un modèle U-Net.
-        Affiche les images corrigées et permet l'ajustement du facteur de correction.
-        """
+        """Corrige les artefacts de mouvement détectés dans l'image à l'aide d'un modèle U-Net."""
         try:
-            # Chargement du modèle de correction
             model = UNet(learning_rate=0.00035121036825643817)
             state_dict = torch.load("C:/Users/maxim/PycharmProjects/artefact_detection/Neur_network/unet_model_residus_mouvements_opti.pth", weights_only=True)
             model.load_state_dict(state_dict, strict=False)
             model.eval()
 
-            # Définir la transformation
             transform = transforms.Compose([
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
             ])
 
-            # Chargement et transformation de l'image de test
             test_image = Image.open(self.image_path).convert('L')
             test_image = transform(test_image).unsqueeze(0)
 
-            # Prédiction des résidus et stockage pour ajustement
             with torch.no_grad():
                 self.predicted_residuals = model(test_image)
 
-            # Correction initiale avec le facteur par défaut
             self.update_correction()
 
-            # Rendre visibles le curseur, les champs de redimensionnement et le bouton
             self.slider.setVisible(True)
             self.slider_value_label.setVisible(True)
-            self.resize_widget.setVisible(True)
-            self.width_input.clear()
-            self.height_input.clear()
             self.adjustSize()
         except Exception as e:
             self.label.setText(f"Erreur lors de la correction : {e}")
             print(f"Erreur lors de la correction des artefacts : {e}")
 
     def update_correction(self):
-        """
-        Met à jour l'image corrigée en fonction du facteur de correction actuel.
-        """
+        """Met à jour l'image corrigée en fonction du facteur de correction actuel."""
         if self.predicted_residuals is not None:
-            # Récupère le facteur de correction actuel à partir du curseur
             factor = self.slider.value() / 10.0
             self.slider_value_label.setText(f"Facteur de correction : {factor:.1f}")
             test_image = Image.open(self.image_path).convert('L')
@@ -239,93 +201,84 @@ class ArtifactCorrectionApp(QMainWindow):
             ])
             test_image = transform(test_image).unsqueeze(0)
 
-            # Applique le facteur de correction
             self.corrected_image = (
                 test_image.squeeze().cpu().detach().numpy() -
                 factor * self.predicted_residuals.squeeze().cpu().detach().numpy()
             )
 
-            # Afficher les images sur l'interface avec les dimensions stockées
-            self.display_images(test_image.squeeze().cpu().detach().numpy(), self.corrected_image, resized=True)
+            self.display_images(test_image.squeeze().cpu().detach().numpy(), self.corrected_image)
 
-    def display_images(self, input_image, corrected_image, resized=False):
-        """
-        Affiche les images originales et corrigées sur l'interface.
-
-        Paramètres :
-            input_image (ndarray) : Image d'entrée en format numpy.
-            corrected_image (ndarray) : Image corrigée en format numpy.
-            resized (bool) : Indique si les images doivent être redimensionnées.
-        """
+    def display_images(self, input_image, corrected_image):
+        """Affiche les images originales et corrigées sur l'interface."""
         original_qpixmap = self.numpy_to_qpixmap(input_image)
         corrected_qpixmap = self.numpy_to_qpixmap(corrected_image)
 
-        # Appliquer les dimensions stockées si les images ont été redimensionnées
-        if resized and self.current_width and self.current_height:
-            original_qpixmap = original_qpixmap.scaled(self.current_width, self.current_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-            corrected_qpixmap = corrected_qpixmap.scaled(self.current_width, self.current_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        # Définir la taille par défaut à 350x350 pixels
+        default_width = 350
+        default_height = 350
 
-        # Définir les QPixmaps sur les labels et les rendre visibles
+        original_qpixmap = original_qpixmap.scaled(default_width, default_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        corrected_qpixmap = corrected_qpixmap.scaled(default_width, default_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
         self.original_image_label.setPixmap(original_qpixmap)
         self.corrected_image_label.setPixmap(corrected_qpixmap)
         self.original_image_label.setVisible(True)
         self.corrected_image_label.setVisible(True)
 
     def numpy_to_qpixmap(self, image_array):
-        """
-        Convertit un tableau numpy en QPixmap pour l'affichage.
-
-        Paramètres :
-            image_array (ndarray) : Tableau numpy représentant l'image.
-
-        Retourne :
-            QPixmap : Image convertie en format QPixmap.
-        """
-        # Normaliser l'image à la plage 0-255 et convertir en uint8
+        """Convertit un tableau numpy en QPixmap pour l'affichage."""
         image_array = (255 * (image_array - np.min(image_array)) / (np.max(image_array) - np.min(image_array))).astype(np.uint8)
         height, width = image_array.shape
-
-        # Convertir le tableau numpy en QImage
         q_image = QImage(image_array.data, width, height, QImage.Format_Grayscale8)
-
-        # Convertir QImage en QPixmap
         return QPixmap.fromImage(q_image)
 
-    def apply_resize(self):
-        """
-        Redimensionne les images affichées en fonction des dimensions saisies par l'utilisateur.
-        """
+    def display_grad_cam(self):
+        """Affiche la heatmap Grad-CAM superposée sur l'image chargée dans l'interface principale."""
+        if self.model is None or self.image_path is None:
+            self.label.setText("Erreur: Modèle ou image non chargé.")
+            return
+
         try:
-            width = int(self.width_input.text())
-            height = int(self.height_input.text())
-            self.resize_images(width, height)
-        except ValueError:
-            self.label.setText("Veuillez entrer des nombres valides pour la largeur et la hauteur.")
+            transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+            ])
 
-    def resize_images(self, width, height):
-        """
-        Redimensionne les images affichées à la largeur et hauteur spécifiées.
+            image = Image.open(self.image_path)
+            input_image = transform(image).unsqueeze(0).to(self.device)
 
-        Paramètres :
-            width (int) : Largeur souhaitée pour les images.
-            height (int) : Hauteur souhaitée pour les images.
-        """
-        if self.original_image_label.pixmap() and self.corrected_image_label.pixmap():
-            # Stocker les dimensions redimensionnées actuelles
-            self.current_width = width
-            self.current_height = height
+            self.target_layer = self.model.blocks[-1].denseblock[-1].conv
 
-            # Redimensionner l'image originale
-            resized_original = self.original_image_label.pixmap().scaled(
-                width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation
-            )
-            self.original_image_label.setPixmap(resized_original)
+            grad_cam = GradCAM(self.model, self.target_layer)
 
-            # Redimensionner l'image corrigée
-            resized_corrected = self.corrected_image_label.pixmap().scaled(
-                width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation
-            )
-            self.corrected_image_label.setPixmap(resized_corrected)
+            cam_mask = grad_cam.generate_cam(input_image)
+
+            heatmap_image, _ = visualize_cam_on_image(image, cam_mask)
+
+            pixmap = self.pil_image_to_qpixmap(heatmap_image)
+
+            # Redimensionner la Grad-CAM à 350x350 pixels par défaut
+            default_width = 350
+            default_height = 350
+            pixmap = pixmap.scaled(default_width, default_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+            self.grad_cam_label.setPixmap(pixmap)
+            self.grad_cam_label.setVisible(False)
+            self.toggle_grad_cam_button.setVisible(True)
+        except Exception as e:
+            self.label.setText(f"Erreur lors de l'affichage de Grad-CAM : {e}")
+            print(f"Erreur lors de l'affichage de Grad-CAM : {e}")
+
+    def toggle_grad_cam(self):
+        """Bascule la visibilité de la heatmap Grad-CAM."""
+        self.grad_cam_label.setVisible(not self.grad_cam_label.isVisible())
+    def pil_image_to_qpixmap(self, image):
+        """Convertit une image PIL en QPixmap."""
+        image = image.convert("RGB")
+        data = image.tobytes("raw", "RGB")
+        q_image = QImage(data, image.width, image.height, QImage.Format_RGB888)
+        return QPixmap.fromImage(q_image)
 
 
 def main():
