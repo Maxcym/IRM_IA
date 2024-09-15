@@ -32,31 +32,41 @@ La simulation des artefacts de mouvement dans ce projet est réalisée en appliq
 
 La classe `MotionArtifactSimulator` permet de simuler des artefacts de mouvement sur des images IRM en introduisant des décalages de phase dans des régions spécifiques de l'espace k. Voici les principales fonctionnalités de cette méthode :
 
-2. **Simulation des artefacts** :
+**Simulation des artefacts** :
    - Le simulateur lit les images IRM d'entrée et alterne les effets de décalage entre les directions AP et LR pour chaque  image :
      - **Antéro-Postérieure (AP)** : Décalage dans les lignes de l'espace k.
      - **Latérale (LR)** : Décalage dans les colonnes de l'espace k.
    - Des décalages de phase aléatoires sont appliqués sur des régions spécifiques (centre ou bords) de l'espace k, modifiant l'image en conséquence.
 
-3. **Enregistrement des décalages de phase sous forme de graphiques** :
+**Enregistrement des décalages de phase sous forme de graphiques** :
    - Les décalages de phase appliqués sont enregistrés dans un fichier CSV pour chaque image, ce qui permet une analyse précise des modifications effectuées.
    - En plus des fichiers CSV, les décalages de phase appliqués sont également enregistrés sous forme de graphiques. Ces graphiques montrent la distribution des décalages dans l'espace k, ce qui permet de visualiser l'impact du mouvement simulé sur l'image.
    - Les images corrompues sont sauvegardées avec leurs résidus de mouvement, qui représentent les différences entre les images d'origine et les images altérées.
 
-6. **Affichage des Résultats** :
+**Affichage des Résultats** :
    - Le simulateur permet d'afficher les images originales, les images corrompues, les décalages de phase appliqués, et les résidus de mouvement pour une analyse visuelle des artefacts simulés.
 
-## Interface utilisateur pour tester les réseaux de neurones
+## Optimisation des Hyperparamètres
 
-Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester facilement les réseaux de neurones pour la détection et la correction des artefacts de mouvement dans les images IRM. Cette application, développée en Python avec PyQt5, propose les fonctionnalités suivantes :
+Pour le modèle U-Net, l’optimisation des hyperparamètres a été réalisée pour améliorer l'efficacité et la performance du processus d'entraînement. L'objectif était de trouver les valeurs optimales pour le taux d’apprentissage, le choix de l'optimiseur, le facteur de réduction du taux d’apprentissage, et la patience du scheduler. L'optimisation des hyperparamètres n’a pas été effectuée sur la structure du réseau elle-même, car l'architecture montrait déjà de bons résultats lors des tests préliminaires.
 
-- **Chargement des Images** : Permet de charger des images IRM avec des artefacts de mouvement directement depuis votre ordinateur.
-- **Détection des Artefacts** : Utilise le modèle DenseNet pour détecter la présence d'artefacts de mouvement dans les images chargées.
-- **Correction des Artefacts** : Si des artefacts sont détectés, le modèle U-Net est utilisé pour corriger l'image, améliorant ainsi sa qualité.
-- **Ajustement du Facteur de Correction** : Un curseur est disponible pour ajuster dynamiquement le facteur de correction appliqué aux résidus de mouvement.
-- **Redimensionnement des Images** : Des champs de saisie permettent de redimensionner les images affichées selon les besoins de l'utilisateur.
+### Stratégie d'Optimisation
 
-## Hyperparamètres des modèles
+**Hyperparamètres optimisés** :
+   - **Taux d’apprentissage (learning rate)** : Contrôle la vitesse d'ajustement des poids du réseau au cours de l'entraînement. Une valeur trop élevée peut entraîner un apprentissage trop rapide et instable, tandis qu'une valeur trop faible peut ralentir considérablement le processus d'entraînement.
+   - **Choix de l’optimiseur (Adam, AdamW)** : Les optimisateurs influencent la façon dont les poids sont mis à jour pendant l'entraînement. Adam et AdamW sont réputés pour leur efficacité et leur capacité à converger rapidement.
+   - **Facteur de réduction du taux d’apprentissage** : Réduit le learning rate lorsque la métrique surveillée stagne, ce qui permet d'affiner l'apprentissage du modèle en phase de convergence.
+   - **Patience du scheduler** : Définit le nombre d'époques pendant lesquelles le modèle peut stagner avant de réduire le learning rate. Cela aide à éviter la réduction prématurée du taux d'apprentissage.
+
+### Méthodologie d'Optimisation avec Optuna
+
+Optuna a été utilisé pour l’optimisation des hyperparamètres en testant différentes combinaisons afin de minimiser la perte de validation du modèle.
+
+**Création de la Fonction Objective** : La fonction objective évalue différentes configurations d'hyperparamètres en entraînant le modèle et en enregistrant la perte de validation.
+   
+**Utilisation de Callbacks de Pruning** : Un callback spécifique a été mis en place pour stopper l’entraînement des essais qui ne montraient pas d’amélioration significative, permettant ainsi d’accélérer l’optimisation.
+
+## Hyperparamètres des modèles utilisés pour l'entraînement après optimisation
 
 ### Hyperparamètres du modèle DenseNet 
 
@@ -86,4 +96,14 @@ Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester 
 - **Scheduler de réduction du taux d'apprentissage (« ReduceLROnPlateau »)** : Réduit le taux d'apprentissage lorsqu’une métrique surveillée reste constante.
 - **Early Stopping (« patience » = 15)** : Interrompt l'entraînement lorsque la perte de validation ne s’améliore pas sur un nombre d'époques défini.
 - **Attention Kernel Size (« kernel_size » = 7)** : Taille du noyau utilisé dans le module d'attention spatiale pour capturer les caractéristiques des cartes de caractéristiques.
+
+## Interface utilisateur pour tester les réseaux de neurones
+
+Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester facilement les réseaux de neurones pour la détection et la correction des artefacts de mouvement dans les images IRM. Cette application, développée en Python avec PyQt5, propose les fonctionnalités suivantes :
+
+- **Chargement des Images** : Permet de charger des images IRM avec des artefacts de mouvement directement depuis votre ordinateur.
+- **Détection des Artefacts** : Utilise le modèle DenseNet pour détecter la présence d'artefacts de mouvement dans les images chargées.
+- **Correction des Artefacts** : Si des artefacts sont détectés, le modèle U-Net est utilisé pour corriger l'image, améliorant ainsi sa qualité.
+- **Ajustement du Facteur de Correction** : Un curseur est disponible pour ajuster dynamiquement le facteur de correction appliqué aux résidus de mouvement.
+- **Redimensionnement des Images** : Des champs de saisie permettent de redimensionner les images affichées selon les besoins de l'utilisateur.
 
