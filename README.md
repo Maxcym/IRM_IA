@@ -2,7 +2,7 @@
 
 ## Description du projet
 
-Ce projet vise à développer des méthodes basées sur l'intelligence artificielle pour détecter et corriger les artefacts de mouvement sur les images d'Imagerie par Résonance Magnétique (IRM) cérébrales. Ces artefacts sont causés par des déplacements volontaires ou involontaires des patients lors des acquisitions IRM, ce qui dégrade la qualité des images et complique le diagnostic médical. Ce projet propose donc une solution visant à améliorer la qualité des images et à faciliter leur interprétation clinique.
+Ce projet vise à développer des méthodes basées sur l'intelligence artificielle pour détecter et corriger les artefacts de mouvement sur les images d'Imagerie par Résonance Magnétique (IRM) cérébrales. Ces artefacts sont causés par des déplacements volontaires ou involontaires des patients lors des acquisitions IRM, ce qui dégrade la qualité des images et complique le diagnostic médical. Ce travail propose donc une solution visant à améliorer la qualité des images et à faciliter leur interprétation clinique.
 
 ## Technologies utilisées
 
