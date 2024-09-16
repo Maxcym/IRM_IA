@@ -6,7 +6,7 @@ Ce projet vise à développer des méthodes basées sur l'intelligence artificie
 
 ## Technologies utilisées
 
-- **Python** : Langage principal pour le développement des algorithmes.
+- **Python** : Langage principal pour le développement des algorithmes (version 3.9.13).
 - **PyTorch** : Framework utilisé pour l'implémentation des réseaux de neurones, facilitant la création et l'entraînement de modèles de deep learning.
 - **PyTorch Lightning** : Extension de PyTorch qui simplifie le code de recherche en structurant les scripts d'entraînement, rendant le code plus propre et plus facile à gérer tout en permettant une intégration facile avec des outils comme Optuna pour l'optimisation.
 - **Optuna** : Bibliothèque pour l'optimisation des hyperparamètres, permettant de trouver les configurations optimales pour améliorer les performances des modèles.
@@ -28,7 +28,9 @@ Pour visualiser la diversité des artefacts de mouvement dans ce dataset, une an
 
 Cette approche rend les modèles plus robustes face à différents niveaux de dégradation.
 
-<img src="https://github.com/Maxcym/IRM_IA/blob/main/Dataset_Normalized_UNet/distribution.png" alt="Distribution des scores SSIM avec classification par seuils des artefacts de mouvement (Dataset de Test)" width="400"/>
+### Distribution des scores SSIM avec classification par seuils des artefacts de mouvement du dataset de test
+
+<img src="https://github.com/Maxcym/IRM_IA/blob/main/Dataset_Normalized_UNet/distribution_image.png" alt="Distribution des scores SSIM avec classification par seuils des artefacts de mouvement (Dataset de Test)" width="400"/>
 
 ## Méthode de simulation des artefacts de mouvement
 
@@ -114,6 +116,6 @@ Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester 
 - **Correction des Artefacts** : Si des artefacts sont détectés, le modèle U-Net est utilisé pour corriger l'image, améliorant ainsi sa qualité.
 - **Ajustement du Facteur de Correction** : Un curseur est disponible pour ajuster dynamiquement le facteur de correction appliqué aux résidus de mouvement.
 - **Redimensionnement des Images** : Des champs de saisie permettent de redimensionner les images affichées selon les besoins de l'utilisateur.
-- **Visualisation de la Grad-CAM** : L'interface permet également d'afficher la Grad-CAM (Gradient-weighted Class Activation Mapping), qui met en évidence les zones de l'image ayant le plus influencé la détection des artefacts par le modèle. 
+
 
 
