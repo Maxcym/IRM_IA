@@ -6,7 +6,7 @@ Ce projet vise à développer des méthodes basées sur l'intelligence artificie
 
 ## Technologies utilisées
 
-- **Python** : Langage principal pour le développement des algorithmes.
+- **Python** : Langage principal pour le développement des algorithmes (version 3.9.13).
 - **PyTorch** : Framework utilisé pour l'implémentation des réseaux de neurones, facilitant la création et l'entraînement de modèles de deep learning.
 - **PyTorch Lightning** : Extension de PyTorch qui simplifie le code de recherche en structurant les scripts d'entraînement, rendant le code plus propre et plus facile à gérer tout en permettant une intégration facile avec des outils comme Optuna pour l'optimisation.
 - **Optuna** : Bibliothèque pour l'optimisation des hyperparamètres, permettant de trouver les configurations optimales pour améliorer les performances des modèles.
