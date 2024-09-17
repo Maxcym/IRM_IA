@@ -116,6 +116,8 @@ Le projet inclut une interface utilisateur graphique (GUI) qui permet de tester 
 - **Correction des Artefacts** : Si des artefacts sont détectés, le modèle U-Net est utilisé pour corriger l'image, améliorant ainsi sa qualité.
 - **Ajustement du Facteur de Correction** : Un curseur est disponible pour ajuster dynamiquement le facteur de correction appliqué aux résidus de mouvement.
 - **Redimensionnement des Images** : Des champs de saisie permettent de redimensionner les images affichées selon les besoins de l'utilisateur.
+- **Affichage de la Grad-CAM** : Permet de visualiser la Grad-CAM pour comprendre quelles régions de l'image ont influencé la décision du modèle lors de la détection des artefacts. 
+
 
 
 
