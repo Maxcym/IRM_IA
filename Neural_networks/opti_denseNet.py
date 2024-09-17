@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 torch.set_float32_matmul_precision('high')
 
 # 1. Préparation du Dataset
-data_dir = "/homes_unix/cayman/PycharmProjects/artefact_detection/Dataset_Normalized_DenseNet"
+data_dir = "/homes_unix/cayman/PycharmProjects/artefact_detection/Dataset_Normalized"
 
 # Définir les transformations pour les images d'entraînement et de validation
 train_transforms = transforms.Compose([

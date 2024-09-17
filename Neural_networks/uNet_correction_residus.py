@@ -79,8 +79,8 @@ class ArtefactDataset(Dataset):
         return {'avec_artefact': artefact_image, 'residu_mouvement': residu_mouvement}
 
 
-data_dir_artefacts = "../Dataset_Normalized_UNet/Class_1"
-data_dir_targets = "../Dataset_Normalized_UNet/Class_0"
+data_dir_artefacts = "../Dataset_Normalized/Class_1"
+data_dir_targets = "../Dataset_Normalized/Class_0"
 
 train_transforms = transforms.Compose([
     transforms.Grayscale(num_output_channels=1),

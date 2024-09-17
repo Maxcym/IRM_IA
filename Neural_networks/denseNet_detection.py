@@ -13,7 +13,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 # 1. Préparation du Dataset
 
 # Chemin vers le dataset
-data_dir = "C:/Users/maxim/PycharmProjects/IRM_IA/Dataset_Normalized_DenseNet"
+data_dir = "../Dataset_Normalized"
 
 # Définir les transformations pour les images d'entraînement et de validation
 train_transforms = transforms.Compose([
